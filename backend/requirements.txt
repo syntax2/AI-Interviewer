@@ -1,0 +1,6 @@
+flask
+openai
+gtts
+psycopg2-binary
+python-dotenv
+

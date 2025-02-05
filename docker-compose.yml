@@ -1,0 +1,97 @@
+version: '3.8'
+
+# services:
+#   postgres:
+#     image: postgres:15-alpine
+#     environment:
+#       POSTGRES_USER: dev_user
+#       POSTGRES_PASSWORD: dev_pass
+#       POSTGRES_DB: interview_db
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U dev_user -d interview_db"]
+#       interval: 5s
+#       timeout: 5s
+#       retries: 5
+
+#   backend:
+#     build:
+#       context: ./backend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "5000:5000"
+#     environment:
+#       - DB_HOST=postgres
+#       - DB_PORT=5432
+#       - DB_NAME=interview_db
+#       - DB_USER=dev_user
+#       - DB_PASS=dev_pass
+#       - OPENAI_API_KEY=${OPENAI_API_KEY}
+#     depends_on:
+#       postgres:
+#         condition: service_healthy
+
+#   frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3000:3000"
+#     environment:
+#       - REACT_APP_BACKEND_URL=http://localhost:5000
+#     depends_on:
+#       - backend
+
+# volumes:
+#   postgres_data:
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_pass
+      POSTGRES_DB: interview_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev_user -d interview_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=interview_db
+      - DB_USER=dev_user
+      - DB_PASS=dev_pass
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:5000
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
